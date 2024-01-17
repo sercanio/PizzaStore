@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // DB Context
 // In-Memory :
 //builder.Services.AddDbContext<PizzaDb>(options => options.UseInMemoryDatabase("Items"));
@@ -20,6 +19,18 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "PizzaStore Web API", Description = "Making the Pizzas you love", Version = "v1" });
 });
 
+// COSRS Service Register
+string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+      builder =>
+      {
+          builder.WithOrigins(
+            "http://example.com", "*");
+      });
+});
+
 var app = builder.Build();
 
 // Swagger Middleware
@@ -28,6 +39,9 @@ app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Todo API V1");
 });
+
+// Use CORS
+app.UseCors(MyAllowSpecificOrigins);
 
 // Routes 
 

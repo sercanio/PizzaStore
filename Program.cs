@@ -4,8 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // DB Context
-builder.Services.AddDbContext<PizzaDb>(options => options.UseInMemoryDatabase("Items"));
+// In-Memory :
+//builder.Services.AddDbContext<PizzaDb>(options => options.UseInMemoryDatabase("Items"));
+
+// SqLite :
+var connectionString = builder.Configuration.GetConnectionString("Pizzas") ?? "Data Source=Pizzas.db";
+builder.Services.AddSqlite<PizzaDb>(connectionString);
 
 // Swagger Service Register
 builder.Services.AddEndpointsApiExplorer();
